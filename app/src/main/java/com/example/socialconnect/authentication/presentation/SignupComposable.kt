@@ -20,6 +20,7 @@ import androidx.navigation.NavHostController
 import com.composables.icons.lucide.ArrowBigLeft
 import com.composables.icons.lucide.Lucide
 import com.example.socialconnect.navigation_setup.HOME_ROUTE
+import com.example.socialconnect.navigation_setup.Screens
 import com.example.socialconnect.util.MyButton
 import com.example.socialconnect.util.MyTextField
 import com.example.socialconnect.util.MyTopAppBar
@@ -129,6 +130,7 @@ fun SignupComposable(navController: NavHostController) {
                         }
                         isError = false
                         errorMessage = ""
+                        navController.navigate(route = Screens.AdditionalInformationScreen.route)
                         authViewModel.createUserWithEmailAndPassword(email.toString(), password.toString())
                     },
                     isEmptyBackground = false

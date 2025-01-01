@@ -15,6 +15,7 @@ sealed class Screens(val route:String) {
     data object LoginScreen : Screens("loginScreen")
     data object SignupScreen : Screens("signupScreen")
     data object ForgetPasswordScreen : Screens("forgetPasswordScreen")
+    data object AdditionalInformationScreen : Screens("AdditionalInformationScreen")
 }
 
 sealed class BottomAppBarScreen(val route: String, val label: String, val icon: ImageVector) {

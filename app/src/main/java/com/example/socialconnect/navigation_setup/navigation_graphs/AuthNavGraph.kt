@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.example.socialconnect.authentication.presentation.AdditionalInfoComposable
 import com.example.socialconnect.authentication.presentation.ForgetPasswordComposable
 import com.example.socialconnect.authentication.presentation.LoginComposable
 import com.example.socialconnect.authentication.presentation.SignupComposable
@@ -29,6 +30,11 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController){
             route = Screens.ForgetPasswordScreen.route,
         ){
             ForgetPasswordComposable(navController)
+        }
+        composable(
+            route = Screens.AdditionalInformationScreen.route
+        ){
+            AdditionalInfoComposable(navController)
         }
     }
 }
