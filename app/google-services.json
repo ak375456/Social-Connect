@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "993214027110",
+    "project_id": "socialconnect-e5bad",
+    "storage_bucket": "socialconnect-e5bad.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993214027110:android:5e6fce8201919b4492e4a7",
+        "android_client_info": {
+          "package_name": "com.example.socialconnect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYZRyzrGrMlwrDAr3FSl0z4q7s7eRk0CU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
