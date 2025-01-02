@@ -45,13 +45,7 @@ fun SignupComposable(navController: NavHostController) {
     val authState by authViewModel.authState.collectAsState()
     val context = LocalContext.current
 
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri ->
-            imageUri = uri
-        }
-    )
+
 
     // State variables
     var email by remember { mutableStateOf("") }
@@ -100,28 +94,7 @@ fun SignupComposable(navController: NavHostController) {
                 modifier = Modifier.padding(16.dp)
             )
             Spacer(modifier = Modifier.height(18.dp))
-            Box (
-                modifier = Modifier.size(80.dp)
-                    .background(MaterialTheme.colorScheme.secondaryContainer,
-                        shape = CircleShape
-                    )
-                    .clickable { launcher.launch("image/*") },
-                contentAlignment = Alignment.BottomEnd,
-            ){
-                if (imageUri != null) {
-                    // Show selected image using Coil
-                    Image(
-                        painter = rememberAsyncImagePainter(imageUri),
-                        contentDescription = "Selected Image",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(shape = CircleShape)
-                            .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
-                    )
-                }
-                Icon(Lucide.Camera,"")
-            }
+
             MyTextField(
                 value = email,
                 onValueChanged = { email = it },

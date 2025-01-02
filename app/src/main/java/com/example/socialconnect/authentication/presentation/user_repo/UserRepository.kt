@@ -5,5 +5,6 @@ data class UserRepository(
     val lastName:String,
     val id: String,
     val number: String,
-    val profilePictureLink: String
+    val profilePictureLink: String,
+    val bio: String,
 )
