@@ -7,4 +7,7 @@ data class UserRepository(
     val number: String,
     val profilePictureLink: String,
     val bio: String,
+    val designation: String,
+    val twitter: String,
+    val website: String
 )

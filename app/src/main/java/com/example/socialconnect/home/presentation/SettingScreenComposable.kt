@@ -36,9 +36,12 @@ fun SettingScreen(){
             var firstName by remember{ mutableStateOf("") }
             var lastName by remember{ mutableStateOf("") }
             var number by remember{ mutableStateOf("") }
+            var designation by remember{ mutableStateOf("") }
+            var twitter by remember{ mutableStateOf("") }
+            var website by remember{ mutableStateOf("") }
+            var email by remember{ mutableStateOf("") }
             var id by remember{ mutableStateOf("") }
             var bio by remember{ mutableStateOf("") }
-            var imageUri by remember{ mutableStateOf<Uri?>(null) }
             MyTextField(
                 value = id,
                 onValueChanged = {id=it},

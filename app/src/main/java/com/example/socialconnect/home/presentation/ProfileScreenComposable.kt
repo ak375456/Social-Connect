@@ -21,9 +21,12 @@ import androidx.compose.ui.Modifier
 import com.example.socialconnect.util.MyTopAppBar
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.socialconnect.authentication.presentation.AuthState
@@ -39,7 +42,6 @@ fun ProfileScreen(authViewModel: AuthViewModel = hiltViewModel()){
         authViewModel.getUserData()
     }
 
-    // UI
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -84,17 +86,7 @@ fun UserProfileContent(userData: Map<String, Any>) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "User Profile",
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "First Name: ${userData["firstName"] ?: "N/A"}")
-        Text(text = "Last Name: ${userData["lastName"] ?: "N/A"}")
-        Text(text = "Number: ${userData["number"] ?: "N/A"}")
-        Text(text = "Bio: ${userData["bio"] ?: "N/A"}")
-        // Optionally, show the profile picture using Coil if available
+
         userData["profilePictureLink"]?.let { profilePictureLink ->
             Image(
                 painter = rememberAsyncImagePainter(profilePictureLink),
@@ -105,5 +97,26 @@ fun UserProfileContent(userData: Map<String, Any>) {
                 contentScale = ContentScale.Crop
             )
         }
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text ="${userData["firstName"]} ${userData["lastName"]}",
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                fontSize = 32.sp
+            )
+        )
+        Text(
+            text = "${userData["designation"] ?: "N/A"}",
+            style = TextStyle(
+                fontWeight = FontWeight.ExtraLight,
+                fontSize = 16.sp
+            )
+        )
+        Text(text = "Bio: ${userData["bio"] ?: "N/A"}")
+        Text(text = "Number: ${userData["number"] ?: "N/A"}")
+
+
+        Text(text = "Twitter: ${userData["twitter"] ?: "N/A"}")
+        Text(text = "Website: ${userData["website"] ?: "N/A"}")
+        Text(text = "Email: ${userData["email"] ?: "N/A"}")
     }
 }

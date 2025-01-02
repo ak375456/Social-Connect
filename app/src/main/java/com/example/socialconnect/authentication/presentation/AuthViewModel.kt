@@ -20,7 +20,6 @@ class AuthViewModel @Inject constructor() : ViewModel() {
     private val auth: FirebaseAuth = Firebase.auth
     private val db = Firebase.firestore
 
-    // StateFlow for authentication state
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
     val authState = _authState.asStateFlow()
 
@@ -40,7 +39,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
                     if (!querySnapshot.isEmpty) {
                         val userData = querySnapshot.documents[0].data
                         if (userData != null) {
-                            _userData.value = userData // Update userData state
+                            _userData.value = userData
                             _authState.value = AuthState.Success
                         } else {
                             _authState.value = AuthState.Error("User data is null")
@@ -71,15 +70,19 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    //    this function will create car object in db with uid auto-generated
+    //    this function will create object in db with uid auto-generated
     fun createUser(
         firstName: String,
         lastName: String,
         number: String,
         profilePictureLink: String,
-        bio: String
+        bio: String,
+        designation: String,
+        twitter: String,
+        website: String
     ) {
         val currentUserUid = auth.currentUser?.uid
+        val currentUserEmail = auth.currentUser?.email
         if (currentUserUid == null) {
             _authState.value = AuthState.Error("No authenticated user found")
             return
@@ -88,16 +91,20 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         val user = hashMapOf(
             "firstName" to firstName,
             "lastName" to lastName,
-            "id" to currentUserUid, // Use Firebase Auth UID
+            "id" to currentUserUid,
             "number" to number,
             "profilePictureLink" to profilePictureLink,
-            "bio" to bio
+            "bio" to bio,
+            "designation" to designation,
+            "twitter" to twitter,
+            "website" to website,
+            "email" to currentUserEmail
         )
 
         viewModelScope.launch {
             _authState.value = AuthState.Loading
             db.collection("users")
-                .document(currentUserUid) // Set document ID to Firebase Auth UID
+                .document(currentUserUid)
                 .set(user)
                 .addOnSuccessListener {
                     _authState.value = AuthState.Success

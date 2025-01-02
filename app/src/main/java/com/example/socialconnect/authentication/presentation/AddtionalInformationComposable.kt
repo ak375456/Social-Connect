@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -37,7 +39,11 @@ import com.composables.icons.lucide.Biohazard
 import com.composables.icons.lucide.Camera
 import com.composables.icons.lucide.CircleUser
 import com.composables.icons.lucide.Hash
+import com.composables.icons.lucide.Instagram
+import com.composables.icons.lucide.Link
 import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Twitter
+import com.composables.icons.lucide.Workflow
 import com.example.socialconnect.navigation_setup.HOME_ROUTE
 import com.example.socialconnect.util.MyButton
 import com.example.socialconnect.util.MyTextField
@@ -58,12 +64,16 @@ fun AdditionalInfoComposable(
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var number by remember { mutableStateOf("") }
+    var designation by remember{ mutableStateOf("") }
+    var twitter by remember{ mutableStateOf("") }
+    var website by remember{ mutableStateOf("") }
     var bio by remember { mutableStateOf("") }
     var isError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
     val authState by authViewModel.authState.collectAsState()
-//    val context = LocalContext.current
+
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(authState) {
         when (authState) {
@@ -87,11 +97,13 @@ fun AdditionalInfoComposable(
         topBar = {
             MyTopAppBar("Additional Information")
         }
+
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
@@ -155,6 +167,25 @@ fun AdditionalInfoComposable(
                 painter = Lucide.Biohazard,
                 isError = isError,
             )
+            MyTextField(
+                value = designation,
+                onValueChanged = { designation = it },
+                label = "Designation",
+                painter = Lucide.Workflow,
+                isError = isError,
+            )
+            MyTextField(
+                value = twitter,
+                onValueChanged = { twitter = it },
+                label = "Instagram",
+                painter = Lucide.Instagram,
+            )
+            MyTextField(
+                value = website,
+                onValueChanged = { website = it },
+                label = "Website",
+                painter = Lucide.Link,
+            )
             if (authState is AuthState.Loading) {
                 CircularProgressIndicator()
             } else {
@@ -171,8 +202,11 @@ fun AdditionalInfoComposable(
                             firstName = firstName,
                             lastName = lastName,
                             number = number,
-                            profilePictureLink = "https://picsum.photos/200/300()",
-                            bio = bio
+                            profilePictureLink = "https://i.ibb.co/jwZ2sch/IMG-20240826-060050-627.jpg",
+                            bio = bio,
+                            designation = designation,
+                            twitter = twitter,
+                            website = website
                         )
                     },
                     text = "Continue"
