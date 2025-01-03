@@ -41,10 +41,14 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.socialconnect.authentication.presentation.AuthState
 import com.example.socialconnect.authentication.presentation.AuthViewModel
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import com.composables.icons.lucide.Earth
+import com.composables.icons.lucide.Instagram
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Mail
+import com.composables.icons.lucide.Phone
 import com.composables.icons.lucide.PhoneCall
-
+import com.example.socialconnect.ui.theme.*
 
 @Composable
 fun ProfileScreen(authViewModel: AuthViewModel = hiltViewModel()){
@@ -146,11 +150,75 @@ fun UserProfileContent(userData: Map<String, Any>) {
         HorizontalDivider(
             modifier = Modifier.padding(vertical = 8.dp)
         )
-
-        Text(text = "Twitter: ${userData["twitter"] ?: "N/A"}")
-        Text(text = "Website: ${userData["website"] ?: "N/A"}")
+        Row (
+            modifier = Modifier.fillMaxWidth()
+                .padding(start = 18.dp),
+        ){
+            Icon(Lucide.Earth,"", tint = Color.Cyan)
+            Spacer(Modifier.width(24.dp))
+            Text(
+                text = "${userData["website"] ?: "N/A"}",
+                style = TextStyle(
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp
+                )
+            )
+        }
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+        Row (
+            modifier = Modifier.fillMaxWidth()
+                .padding(start = 18.dp),
+        ){
+            Icon(Lucide.Instagram,"", tint = Color.Magenta)
+            Spacer(Modifier.width(24.dp))
+            Text(
+                text = "${userData["twitter"] ?: "N/A"}",
+                style = TextStyle(
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp
+                )
+            )
+        }
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+        Row (
+            modifier = Modifier.fillMaxWidth()
+                .padding(start = 18.dp),
+        ){
+            Icon(Lucide.Phone,"", tint = Color.Green)
+            Spacer(Modifier.width(24.dp))
+            Text(
+                text = "${userData["number"] ?: "N/A"}",
+                style = TextStyle(
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp
+                )
+            )
+        }
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+        Row (
+            modifier = Modifier.fillMaxWidth()
+                .padding(start = 18.dp),
+        ){
+            Icon(Lucide.Mail,"", tint = blueMail)
+            Spacer(Modifier.width(24.dp))
+            Text(
+                text = "${userData["email"] ?: "N/A"}",
+                style = TextStyle(
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp
+                )
+            )
+        }
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
         Text(text = "Email: ${userData["email"] ?: "N/A"}")
-        Text(text = "Number: ${userData["number"] ?: "N/A"}")
     }
 }
 
