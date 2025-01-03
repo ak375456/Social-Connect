@@ -240,7 +240,7 @@ fun ExpandableTextWithEllipsis(
                     maxLines = collapsedMaxLines,
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.weight(1f) // Take remaining space
+                    modifier = Modifier.weight(1f)
                 )
                 Text(
                     text = "See More",

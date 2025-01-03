@@ -8,7 +8,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -89,7 +88,6 @@ fun SettingScreenContent(userData: Map<String, Any>) {
         var designation by remember { mutableStateOf("") }
         var twitter by remember { mutableStateOf("") }
         var website by remember { mutableStateOf("") }
-        var email by remember { mutableStateOf("") }
         var id by remember { mutableStateOf("") }
         var bio by remember { mutableStateOf("") }
 

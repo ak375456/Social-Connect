@@ -2,7 +2,6 @@ package com.example.socialconnect.home.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -22,15 +21,15 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
     val currentRoute = navBackStackEntry?.destination?.route
 
     Scaffold(
-        topBar = { DynamicAppBar(currentRoute, navController) }, // App bar changes dynamically
-        bottomBar = { BottomAppBarHolder(navController) } // Bottom navigation bar
+        topBar = { DynamicAppBar(currentRoute, navController) },
+        bottomBar = { BottomAppBarHolder(navController) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            HomeNavGraph(navController) // Content changes based on route
+            HomeNavGraph(navController)
         }
     }
 }
@@ -51,7 +50,7 @@ fun DynamicAppBar(currentRoute: String?, navController: NavHostController) {
             MyTopAppBar(title = "Settings")
         }
         else -> {
-            MyTopAppBar(title = "SocialConnect") // Default title
+            MyTopAppBar(title = "SocialConnect")
         }
     }
 }
