@@ -59,18 +59,9 @@ fun ProfileScreen(authViewModel: AuthViewModel = hiltViewModel()){
         authViewModel.getUserData()
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            MyTopAppBar(
-                title = "User Profile",
 
-            )
-        }
-    ) { innerPadding ->
         Box(
             modifier = Modifier
-                .padding(innerPadding)
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
@@ -93,7 +84,7 @@ fun ProfileScreen(authViewModel: AuthViewModel = hiltViewModel()){
             }
         }
     }
-}
+
 
 @Composable
 fun UserProfileContent(userData: Map<String, Any>) {

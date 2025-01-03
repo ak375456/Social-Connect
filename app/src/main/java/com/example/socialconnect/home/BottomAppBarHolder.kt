@@ -22,9 +22,6 @@ import com.example.socialconnect.navigation_setup.BottomAppBarScreen
 
 @Composable
 fun BottomAppBarHolder(navController: NavHostController) {
-
-
-
     val items = listOf(
         BottomAppBarScreen.HomeScreen,
         BottomAppBarScreen.ProfileScreen,

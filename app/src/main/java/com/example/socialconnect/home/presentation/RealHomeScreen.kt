@@ -1,6 +1,7 @@
 package com.example.socialconnect.home.presentation
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -17,6 +18,7 @@ import com.example.socialconnect.navigation_setup.AUTH_ROUTE
 import com.example.socialconnect.util.MyButton
 import com.example.socialconnect.util.MyTopAppBar
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.unit.dp
 import com.example.socialconnect.navigation_setup.ROOT_ROUTE
 
 
@@ -29,26 +31,22 @@ fun RealHomeScreen(navController: NavHostController) {
     LaunchedEffect(authState) {
         if (authState is AuthState.Success) {
             navController.popBackStack()
-            navController.navigate(AUTH_ROUTE){
+            navController.navigate(AUTH_ROUTE) {
                 popUpTo(ROOT_ROUTE)
             }
         }
     }
 
-    Scaffold(
-        topBar = { MyTopAppBar(title = "Home") },
-        bottomBar = { BottomAppBarHolder(navController) }
-    ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
-            Text(text = "Home Screen")
-            MyButton(
-                text = "Logout",
-                isEmptyBackground = false,
-                onClick = {
-                    authViewModel.signOut()
-                }
-            )
-        }
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Text(text = "Home Screen")
+        MyButton(
+            text = "Logout",
+            isEmptyBackground = false,
+            onClick = {
+                authViewModel.signOut()
+            }
+        )
     }
 }
+
 

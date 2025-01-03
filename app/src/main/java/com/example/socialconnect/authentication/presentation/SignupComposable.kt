@@ -1,27 +1,16 @@
 package com.example.socialconnect.authentication.presentation
 
-import android.net.Uri
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -29,9 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
 import com.composables.icons.lucide.ArrowBigLeft
-import com.composables.icons.lucide.Camera
 import com.composables.icons.lucide.Lucide
 import com.example.socialconnect.navigation_setup.HOME_ROUTE
 import com.example.socialconnect.navigation_setup.Screens
@@ -46,8 +33,6 @@ fun SignupComposable(navController: NavHostController) {
     val context = LocalContext.current
 
 
-
-    // State variables
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -148,8 +133,8 @@ fun SignupComposable(navController: NavHostController) {
                         }
                         isError = false
                         errorMessage = ""
-                        navController.navigate(route = Screens.AdditionalInformationScreen.route)
                         authViewModel.createUserWithEmailAndPassword(email.toString(), password.toString())
+                        navController.navigate(route = Screens.AdditionalInformationScreen.route)
                     },
                     isEmptyBackground = false
                 )

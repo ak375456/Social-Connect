@@ -27,7 +27,8 @@ fun MyTextField(
     passwordVisible: MutableState<Boolean>? = null,
     onPasswordToggle: (() -> Unit)? = null,
     isError:Boolean = false,
-    supportingTextFunction : @Composable (() -> Unit)? = null
+    supportingTextFunction : @Composable (() -> Unit)? = null,
+    isReadOnly: Boolean = false
 ) {
     OutlinedTextField(
         modifier = Modifier
@@ -39,6 +40,7 @@ fun MyTextField(
         leadingIcon = {
             Icon(imageVector = painter, contentDescription = null)
         },
+        readOnly = isReadOnly,
         trailingIcon = {
             if (isPassword) {
                 IconButton(onClick = { onPasswordToggle?.invoke() }) {
@@ -54,5 +56,6 @@ fun MyTextField(
         visualTransformation = if (isPassword && !passwordVisible?.value!!) PasswordVisualTransformation() else VisualTransformation.None,
         isError = isError,
         supportingText = supportingTextFunction,
+
     )
 }
