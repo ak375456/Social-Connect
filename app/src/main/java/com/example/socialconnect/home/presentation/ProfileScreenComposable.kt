@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -124,7 +125,7 @@ fun UserProfileContent(userData: Map<String, Any>) {
             )
         )
         ExpandableTextWithEllipsis(text = userData["bio"] as? String ?: "N/A")
-        Text(text = "Number: ${userData["number"] ?: "N/A"}")
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
@@ -141,12 +142,15 @@ fun UserProfileContent(userData: Map<String, Any>) {
                 Spacer(Modifier.width(6.dp))
                 Text("Email")
             }
-
         }
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
 
         Text(text = "Twitter: ${userData["twitter"] ?: "N/A"}")
         Text(text = "Website: ${userData["website"] ?: "N/A"}")
         Text(text = "Email: ${userData["email"] ?: "N/A"}")
+        Text(text = "Number: ${userData["number"] ?: "N/A"}")
     }
 }
 
