@@ -30,7 +30,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
 //        uid: String
     ) {
         viewModelScope.launch {
-            Log.d("FIREBASE",auth.currentUser?.uid.toString())
+            Log.d("FIREBASE", auth.currentUser?.uid.toString())
             _authState.value = AuthState.Loading
             db.collection("users")
                 .whereEqualTo("id", auth.currentUser?.uid)
@@ -79,7 +79,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         bio: String,
         designation: String,
         twitter: String,
-        website: String
+        website: String,
     ) {
         val currentUserUid = auth.currentUser?.uid
         val currentUserEmail = auth.currentUser?.email
@@ -130,6 +130,25 @@ class AuthViewModel @Inject constructor() : ViewModel() {
                 }
         }
     }
+
+    fun updateUserProfile(updates: Map<String, Any>) {
+        val currentUserUid = auth.currentUser?.uid ?: return
+
+        viewModelScope.launch {
+            _authState.value = AuthState.Loading
+            db.collection("users").document(currentUserUid)
+                .update(updates)
+                .addOnSuccessListener {
+                    _authState.value = AuthState.Success
+                    // Re-fetch the updated user data
+                    getUserData()
+                }
+                .addOnFailureListener { e ->
+                    _authState.value = AuthState.Error(e.message ?: "Unknown error")
+                }
+        }
+    }
+
 
     fun signOut() {
         viewModelScope.launch {

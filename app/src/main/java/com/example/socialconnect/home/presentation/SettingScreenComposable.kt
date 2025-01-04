@@ -31,6 +31,7 @@ import com.composables.icons.lucide.Mail
 import com.composables.icons.lucide.Workflow
 import com.example.socialconnect.authentication.presentation.AuthState
 import com.example.socialconnect.authentication.presentation.AuthViewModel
+import com.example.socialconnect.util.MyButton
 import com.example.socialconnect.util.MyTextField
 import com.example.socialconnect.util.MyTopAppBar
 
@@ -61,7 +62,7 @@ fun SettingScreen(authViewModel: AuthViewModel = hiltViewModel()) {
 
                 is AuthState.Success -> {
                     if (userData != null) {
-                        SettingScreenContent(userData = userData!!)
+                        SettingScreenContent(userData = userData!!,authViewModel = authViewModel)
                     } else {
                         Text(text = "No user data available")
                     }
@@ -74,81 +75,97 @@ fun SettingScreen(authViewModel: AuthViewModel = hiltViewModel()) {
 
 
 @Composable
-fun SettingScreenContent(userData: Map<String, Any>) {
+fun SettingScreenContent(
+    userData: Map<String, Any>,
+    authViewModel: AuthViewModel = hiltViewModel()
+) {
     val scrollState = rememberScrollState()
+
+    // Initializing state variables with Firestore values
+    var firstName by remember { mutableStateOf(userData["firstName"].toString()) }
+    var lastName by remember { mutableStateOf(userData["lastName"].toString()) }
+    var number by remember { mutableStateOf(userData["number"].toString()) }
+    var bio by remember { mutableStateOf(userData["bio"].toString()) }
+    var designation by remember { mutableStateOf(userData["designation"].toString()) }
+    var twitter by remember { mutableStateOf(userData["twitter"].toString()) }
+    var website by remember { mutableStateOf(userData["website"].toString()) }
+
     Column(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
-        var firstName by remember { mutableStateOf("") }
-        var lastName by remember { mutableStateOf("") }
-        var number by remember { mutableStateOf("") }
-        var designation by remember { mutableStateOf("") }
-        var twitter by remember { mutableStateOf("") }
-        var website by remember { mutableStateOf("") }
-        var id by remember { mutableStateOf("") }
-        var bio by remember { mutableStateOf("") }
-
-
         Text(text = "Update your profile information here; the ID field is read-only.")
 
         MyTextField(
             value = userData["id"].toString(),
-            onValueChanged = { id = it },
+            onValueChanged = { /* ID is read-only */ },
             label = "ID",
             painter = Lucide.IdCard,
             isReadOnly = true
         )
         MyTextField(
-            value = userData["firstName"].toString(),
+            value = firstName,
             onValueChanged = { firstName = it },
             label = "First Name",
-            painter = Lucide.CircleUser,
-
+            painter = Lucide.CircleUser
         )
         MyTextField(
-            value = userData["lastName"].toString(),
+            value = lastName,
             onValueChanged = { lastName = it },
             label = "Last Name",
-            painter = Lucide.CircleUser,
+            painter = Lucide.CircleUser
         )
         MyTextField(
-            value = userData["email"].toString(),
-            onValueChanged = { lastName = it },
-            label = "Email",
-            painter = Lucide.Mail,
-        )
-        MyTextField(
-            value = userData["number"].toString(),
+            value = number,
             onValueChanged = { number = it },
             label = "Number",
-            painter = Lucide.Hash,
+            painter = Lucide.Hash
         )
         MyTextField(
-            value = userData["bio"].toString(),
+            value = bio,
             onValueChanged = { bio = it },
             label = "Bio",
-            painter = Lucide.Biohazard,
+            painter = Lucide.Biohazard
         )
         MyTextField(
-            value = userData["designation"].toString(),
+            value = designation,
             onValueChanged = { designation = it },
             label = "Designation",
-            painter = Lucide.Workflow,
+            painter = Lucide.Workflow
         )
         MyTextField(
-            value = userData["twitter"].toString(),
+            value = twitter,
             onValueChanged = { twitter = it },
-            label = "Instagram",
-            painter = Lucide.Instagram,
+            label = "Twitter",
+            painter = Lucide.Instagram
         )
         MyTextField(
-            value = userData["website"].toString(),
+            value = website,
             onValueChanged = { website = it },
             label = "Website",
-            painter = Lucide.Link,
+            painter = Lucide.Link
+        )
+        MyButton(
+            text = "Update Profile",
+            onClick = {
+                // Create a map of only updated values
+                val updates = mutableMapOf<String, Any>()
+                if (firstName != userData["firstName"].toString()) updates["firstName"] = firstName
+                if (lastName != userData["lastName"].toString()) updates["lastName"] = lastName
+                if (number != userData["number"].toString()) updates["number"] = number
+                if (bio != userData["bio"].toString()) updates["bio"] = bio
+                if (designation != userData["designation"].toString()) updates["designation"] = designation
+                if (twitter != userData["twitter"].toString()) updates["twitter"] = twitter
+                if (website != userData["website"].toString()) updates["website"] = website
+
+                // Call the ViewModel function to update Firestore
+                if (updates.isNotEmpty()) {
+                    authViewModel.updateUserProfile(updates)
+                }
+            },
+            isEmptyBackground = true
         )
     }
 }

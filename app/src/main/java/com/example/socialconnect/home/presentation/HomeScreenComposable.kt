@@ -3,6 +3,8 @@ package com.example.socialconnect.home.presentation
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,7 +14,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.socialconnect.home.BottomAppBarHolder
 import com.example.socialconnect.navigation_setup.navigation_graphs.HomeNavGraph
 import androidx.compose.runtime.getValue
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Plus
 import com.example.socialconnect.navigation_setup.BottomAppBarScreen
+import com.example.socialconnect.navigation_setup.Screens
 import com.example.socialconnect.util.MyTopAppBar
 
 @Composable
@@ -22,7 +27,16 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
 
     Scaffold(
         topBar = { DynamicAppBar(currentRoute, navController) },
-        bottomBar = { BottomAppBarHolder(navController) }
+        bottomBar = { BottomAppBarHolder(navController) },
+        floatingActionButton = {
+            if (currentRoute == BottomAppBarScreen.HomeScreen.route) {
+                FloatingActionButton(onClick = {
+                    navController.navigate(route = Screens.PostScreen.route)
+                }) {
+                    Icon(Lucide.Plus,"")
+                }
+            }
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier

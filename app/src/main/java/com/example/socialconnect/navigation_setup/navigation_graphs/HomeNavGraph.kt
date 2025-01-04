@@ -11,6 +11,9 @@ import com.example.socialconnect.home.presentation.RealHomeScreen
 import com.example.socialconnect.home.presentation.SettingScreen
 import com.example.socialconnect.navigation_setup.BottomAppBarScreen
 import com.example.socialconnect.navigation_setup.HOME_ROUTE
+import com.example.socialconnect.navigation_setup.Screens
+import com.example.socialconnect.post_feature.presentation.PostScreenComposable
+
 @Composable
 fun HomeNavGraph(navController: NavHostController) {
     NavHost(
@@ -26,6 +29,9 @@ fun HomeNavGraph(navController: NavHostController) {
     }
         composable(route = BottomAppBarScreen.SettingScreen.route){
             SettingScreen()
+        }
+        composable(route = Screens.PostScreen.route){
+            PostScreenComposable(navController = navController)
         }
     }
 }
