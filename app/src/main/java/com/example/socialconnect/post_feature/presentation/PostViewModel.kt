@@ -57,14 +57,35 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun likePost(post: Post) {
-        viewModelScope.launch {
-            try {
-                val updatedPost = post.copy(likesCount = post.likesCount + 1)
-                postRepository.updatePost(updatedPost)
-                fetchPostsWithUserDetails() // Refresh posts
-            } catch (e: Exception) {
-                _postState.value = PostState.Error(e.message ?: "Failed to like post")
+    fun likePostOptimistic(postWithUser: PostWithUser) {
+
+        val currentState = _postState.value
+        if (currentState is PostState.Success) {
+            val updatedPosts = currentState.posts.map {
+                if (it.post.id == postWithUser.post.id) {
+                    it.copy(post = it.post.copy(likesCount = it.post.likesCount + 1))
+                } else {
+                    it
+                }
+            }
+            _postState.value = PostState.Success(updatedPosts)
+
+            viewModelScope.launch {
+                try {
+                    val updatedPost = postWithUser.post.copy(likesCount = postWithUser.post.likesCount + 1)
+                    postRepository.updatePost(updatedPost)
+                } catch (e: Exception) {
+                    // Rollback optimistic update on failure
+                    _postState.value = PostState.Success(
+                        currentState.posts.map {
+                            if (it.post.id == postWithUser.post.id) {
+                                it.copy(post = it.post.copy(likesCount = it.post.likesCount - 1))
+                            } else {
+                                it
+                            }
+                        }
+                    )
+                }
             }
         }
     }

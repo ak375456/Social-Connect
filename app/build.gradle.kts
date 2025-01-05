@@ -84,4 +84,6 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
 
     implementation("io.coil-kt:coil-compose:2.5.0")
+
+    implementation ("com.airbnb.android:lottie-compose:6.6.2")
 }

@@ -37,6 +37,9 @@ import com.example.socialconnect.navigation_setup.AUTH_ROUTE
 import com.example.socialconnect.util.MyButton
 import com.example.socialconnect.util.MyTopAppBar
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -46,6 +49,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieAnimatable
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.ThumbsUp
 import com.example.socialconnect.navigation_setup.ROOT_ROUTE
@@ -57,6 +64,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import com.example.socialconnect.R
 
 
 @Composable
@@ -105,11 +113,15 @@ fun RealHomeScreen(
                 val posts = (postState as PostState.Success).posts
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(posts) { postWithUser ->
-                        PostItem(postWithUser, onLikeClick = {
-                            postViewModel.likePost(postWithUser.post) // Handle liking a post
-                        })
+                        PostItem(
+                            postWithUser = postWithUser,
+                            onLikeClick = {
+                                postViewModel.likePostOptimistic(postWithUser)
+                            }
+                        )
                     }
                 }
+
             }
 
             is PostState.Error -> {
@@ -124,13 +136,16 @@ fun RealHomeScreen(
 
 @Composable
 fun PostItem(postWithUser: PostWithUser, onLikeClick: () -> Unit) {
+    // State to control Lottie animation visibility
+    var showAnimation by remember { mutableStateOf(false) }
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.like))
+    val progress = rememberLottieAnimatable()
+
     Column(
         modifier = Modifier
             .padding(8.dp)
             .background(
-                color = Color.Gray.copy(
-                    alpha = 0.2f
-                ),
+                color = Color.Gray.copy(alpha = 0.2f),
                 shape = RoundedCornerShape(16.dp)
             )
     ) {
@@ -157,7 +172,6 @@ fun PostItem(postWithUser: PostWithUser, onLikeClick: () -> Unit) {
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(50.dp)
                 )
-
             }
             Spacer(modifier = Modifier.width(12.dp))
             Text(
@@ -174,15 +188,39 @@ fun PostItem(postWithUser: PostWithUser, onLikeClick: () -> Unit) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
-
         ) {
-            IconButton(onClick = onLikeClick) {
-                Icon(Lucide.ThumbsUp, "")
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.size(40.dp)
+            ) {
+                // Like Button
+                IconButton(onClick = {
+                    showAnimation = true // Trigger Lottie animation
+                    onLikeClick()        // Call the like function
+                }) {
+                    Icon(Lucide.ThumbsUp, "")
+                }
 
+                // Lottie Animation
+                if (showAnimation) {
+                    LaunchedEffect(Unit) {
+                        progress.animate(
+                            composition = composition,
+                            iterations = 1
+                        )
+                        showAnimation = false // Hide animation when completed
+                    }
+                    LottieAnimation(
+                        composition = composition,
+                        progress = { progress.progress },
+                        modifier = Modifier.size(100.dp)
+                    )
+                }
             }
             Text(postWithUser.post.likesCount.toString())
         }
     }
+
     val formattedTime = formatTimestamp(postWithUser.post.timestamp)
     Text(
         modifier = Modifier.padding(start = 8.dp),
@@ -191,6 +229,8 @@ fun PostItem(postWithUser: PostWithUser, onLikeClick: () -> Unit) {
     )
     HorizontalDivider()
 }
+
+
 
 fun formatTimestamp(timestamp: Long): String {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
