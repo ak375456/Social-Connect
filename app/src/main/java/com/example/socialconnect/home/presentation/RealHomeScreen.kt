@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,7 +21,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,10 +30,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.socialconnect.authentication.presentation.AuthState
 import com.example.socialconnect.authentication.presentation.AuthViewModel
-import com.example.socialconnect.home.BottomAppBarHolder
 import com.example.socialconnect.navigation_setup.AUTH_ROUTE
 import com.example.socialconnect.util.MyButton
-import com.example.socialconnect.util.MyTopAppBar
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,7 +52,6 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.ThumbsUp
 import com.example.socialconnect.navigation_setup.ROOT_ROUTE
-import com.example.socialconnect.post_feature.domain.model.Post
 import com.example.socialconnect.post_feature.presentation.PostState
 import com.example.socialconnect.post_feature.presentation.PostViewModel
 import com.example.socialconnect.post_feature.presentation.PostWithUser
@@ -65,6 +60,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import com.example.socialconnect.R
+import com.example.socialconnect.navigation_setup.Screens
 
 
 @Composable
@@ -117,7 +113,8 @@ fun RealHomeScreen(
                             postWithUser = postWithUser,
                             onLikeClick = {
                                 postViewModel.likePostOptimistic(postWithUser)
-                            }
+                            },
+                            navController = navController
                         )
                     }
                 }
@@ -135,8 +132,11 @@ fun RealHomeScreen(
 }
 
 @Composable
-fun PostItem(postWithUser: PostWithUser, onLikeClick: () -> Unit) {
-    // State to control Lottie animation visibility
+fun PostItem(postWithUser: PostWithUser,
+             onLikeClick: () -> Unit,
+             navController: NavHostController
+) {
+
     var showAnimation by remember { mutableStateOf(false) }
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.like))
     val progress = rememberLottieAnimatable()
@@ -152,7 +152,13 @@ fun PostItem(postWithUser: PostWithUser, onLikeClick: () -> Unit) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 8.dp, top = 8.dp),
+                .padding(start = 8.dp, top = 8.dp)
+                .clickable{
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "selectedUserId", postWithUser.post.userId
+                    )
+                    navController.navigate(route = "${Screens.ViewProfileScreen.route}/${postWithUser.post.userId}")
+                },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
@@ -195,8 +201,8 @@ fun PostItem(postWithUser: PostWithUser, onLikeClick: () -> Unit) {
             ) {
                 // Like Button
                 IconButton(onClick = {
-                    showAnimation = true // Trigger Lottie animation
-                    onLikeClick()        // Call the like function
+                    showAnimation = true
+                    onLikeClick()
                 }) {
                     Icon(Lucide.ThumbsUp, "")
                 }
@@ -208,7 +214,7 @@ fun PostItem(postWithUser: PostWithUser, onLikeClick: () -> Unit) {
                             composition = composition,
                             iterations = 1
                         )
-                        showAnimation = false // Hide animation when completed
+                        showAnimation = false
                     }
                     LottieAnimation(
                         composition = composition,

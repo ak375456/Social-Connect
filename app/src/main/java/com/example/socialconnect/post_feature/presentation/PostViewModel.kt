@@ -1,9 +1,7 @@
 package com.example.socialconnect.post_feature.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.socialconnect.authentication.presentation.AuthViewModel
 import com.example.socialconnect.post_feature.domain.model.Post
 import com.example.socialconnect.post_feature.domain.repository.PostRepository
 import com.google.firebase.auth.FirebaseAuth
@@ -23,8 +21,11 @@ class PostViewModel @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : ViewModel() {
 
+
     private val _postState = MutableStateFlow<PostState>(PostState.Idle)
     val postState: StateFlow<PostState> = _postState
+
+
 
     fun fetchPostsWithUserDetails() {
         viewModelScope.launch {
@@ -48,7 +49,7 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getUserById(userId: String): User? {
+    suspend fun getUserById(userId: String): User? {
         return try {
             val documentSnapshot = firestore.collection("users").document(userId).get().await()
             documentSnapshot.toObject(User::class.java)
@@ -123,6 +124,7 @@ data class PostWithUser(
     val userName: String,
     val userProfilePicture: String
 )
+
 data class User(
     val id: String = "",
     val firstName: String = "",
