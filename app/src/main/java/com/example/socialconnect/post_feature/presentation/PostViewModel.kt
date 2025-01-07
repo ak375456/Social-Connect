@@ -14,6 +14,8 @@ import kotlinx.coroutines.tasks.await
 import java.util.*
 import javax.inject.Inject
 
+
+// hard to understand this file, fix it before submission
 @HiltViewModel
 class PostViewModel @Inject constructor(
     private val postRepository: PostRepository,
