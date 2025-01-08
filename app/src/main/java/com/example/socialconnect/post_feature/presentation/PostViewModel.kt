@@ -35,7 +35,7 @@ class PostViewModel @Inject constructor(
             try {
                 val posts = postRepository.getPosts()
                 val postsWithUsers = posts.mapNotNull { post ->
-                    val user = getUserById(post.userId) // Fetch user details here
+                    val user = getUserById(post.userId)
                     user?.let {
                         PostWithUser(
                             post = post,
@@ -136,7 +136,8 @@ data class User(
     val bio: String = "",
     val designation: String = "",
     val twitter: String = "",
-    val website: String = ""
+    val website: String = "",
+    val number: String = ""
 )
 
 

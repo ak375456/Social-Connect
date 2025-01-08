@@ -16,7 +16,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SocialConnectTheme {
-                //hello
                 SetupNavGraph(navController = rememberNavController())
             }
         }
