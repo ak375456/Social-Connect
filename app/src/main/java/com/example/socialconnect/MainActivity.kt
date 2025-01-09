@@ -15,6 +15,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            // this graph will decide which composable to show,
+            //if logged in then home screen otherwise login screen
             SocialConnectTheme {
                 SetupNavGraph(navController = rememberNavController())
             }
