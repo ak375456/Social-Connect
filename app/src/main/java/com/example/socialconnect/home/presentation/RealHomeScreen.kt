@@ -3,6 +3,7 @@ package com.example.socialconnect.home.presentation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,6 +51,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieAnimatable
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.MessageCircle
 import com.composables.icons.lucide.ThumbsUp
 import com.example.socialconnect.navigation_setup.ROOT_ROUTE
 import com.example.socialconnect.post_feature.presentation.PostState
@@ -201,18 +203,18 @@ fun PostItem(
             if (postWithUser.post.userId != currentUserId) {
                 Spacer(modifier = Modifier.width(8.dp))
 
-                    MyButton(
-                        text = if (isFollowing) "Unfollow" else "+ Follow",
-                        isEmptyBackground = false,
-                        onClick = {
-                            if (isFollowing) {
-                                postViewModel.unfollowUser(currentUserId, postWithUser.post.userId)
-                            } else {
-                                postViewModel.followUser(currentUserId, postWithUser.post.userId)
-                            }
-                            isFollowing = !isFollowing
+                MyButton(
+                    text = if (isFollowing) "Unfollow" else "+ Follow",
+                    isEmptyBackground = false,
+                    onClick = {
+                        if (isFollowing) {
+                            postViewModel.unfollowUser(currentUserId, postWithUser.post.userId)
+                        } else {
+                            postViewModel.followUser(currentUserId, postWithUser.post.userId)
                         }
-                    )
+                        isFollowing = !isFollowing
+                    }
+                )
 
             }
         }
@@ -222,13 +224,13 @@ fun PostItem(
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.size(40.dp)
             ) {
-                // Like Button
                 IconButton(onClick = {
                     onLikeClick()
                 }) {
@@ -236,6 +238,18 @@ fun PostItem(
                 }
             }
             Text(postWithUser.post.likesCount.toString())
+            if (postWithUser.post.userId != currentUserId) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    IconButton(onClick = {
+
+                    }) {
+                        Icon(Lucide.MessageCircle, "")
+                    }
+                }
+            }
         }
     }
 
@@ -247,8 +261,6 @@ fun PostItem(
     )
     HorizontalDivider()
 }
-
-
 
 
 fun formatTimestamp(timestamp: Long): String {
