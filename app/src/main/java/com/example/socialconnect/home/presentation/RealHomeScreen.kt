@@ -62,6 +62,8 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import com.example.socialconnect.R
+import com.example.socialconnect.navigation_setup.CHAT_ROUTE
+import com.example.socialconnect.navigation_setup.ChatScreen
 import com.example.socialconnect.navigation_setup.Screens
 
 
@@ -244,7 +246,7 @@ fun PostItem(
                     horizontalArrangement = Arrangement.End
                 ) {
                     IconButton(onClick = {
-
+                        navController.navigate(route= CHAT_ROUTE)
                     }) {
                         Icon(Lucide.MessageCircle, "")
                     }
