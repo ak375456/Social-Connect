@@ -117,6 +117,47 @@ fun UserProfileContent(userData: Map<String, Any>) {
                 fontSize = 16.sp
             )
         )
+        val followersCount = (userData["followers"] as? List<*>)?.size ?: 0
+        val followingCount = (userData["following"] as? List<*>)?.size ?: 0
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "$followersCount",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                )
+                Text(
+                    text = "Followers",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Light,
+                        fontSize = 14.sp
+                    )
+                )
+            }
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "$followingCount",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                )
+                Text(
+                    text = "Following",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Light,
+                        fontSize = 14.sp
+                    )
+                )
+            }
+        }
         ExpandableTextWithEllipsis(text = userData["bio"] as? String ?: "N/A")
 
         Row(
@@ -220,14 +261,12 @@ fun ExpandableTextWithEllipsis(
 
     Box(modifier = Modifier.fillMaxWidth()) {
         if (isExpanded) {
-            // Expanded Text
             Text(
                 text = text,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(8.dp)
             )
         } else {
-            // Collapsed Text with ellipsis
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(8.dp)

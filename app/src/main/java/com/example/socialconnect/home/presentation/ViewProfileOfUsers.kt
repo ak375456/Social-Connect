@@ -44,7 +44,7 @@ import com.composables.icons.lucide.Phone
 import com.composables.icons.lucide.PhoneCall
 import com.example.socialconnect.ui.theme.blueMail
 
-//Fix Ui tomorrow for profile Screen
+//Fix Ui tomorrow for profile Screen (FIXED)
 
 @Composable
 fun ViewProfile(userId: String, postViewModel: PostViewModel = hiltViewModel()) {
@@ -87,6 +87,45 @@ fun ViewProfile(userId: String, postViewModel: PostViewModel = hiltViewModel()) 
                     fontSize = 16.sp
                 )
             )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "${user!!.followers.size}",
+                        style = TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp
+                        )
+                    )
+                    Text(
+                        text = "Followers",
+                        style = TextStyle(
+                            fontWeight = FontWeight.Light,
+                            fontSize = 14.sp
+                        )
+                    )
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "${user!!.following.size}",
+                        style = TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp
+                        )
+                    )
+                    Text(
+                        text = "Following",
+                        style = TextStyle(
+                            fontWeight = FontWeight.Light,
+                            fontSize = 14.sp
+                        )
+                    )
+                }
+            }
             ExpandableTextWithEllipsis(text = user!!.bio)
 
             Row(
