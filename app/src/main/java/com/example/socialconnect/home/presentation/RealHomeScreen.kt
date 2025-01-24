@@ -200,9 +200,7 @@ fun PostItem(
             // Follow/Unfollow button
             if (postWithUser.post.userId != currentUserId) {
                 Spacer(modifier = Modifier.width(8.dp))
-                if (isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                } else {
+
                     MyButton(
                         text = if (isFollowing) "Unfollow" else "+ Follow",
                         isEmptyBackground = false,
@@ -215,7 +213,7 @@ fun PostItem(
                             isFollowing = !isFollowing
                         }
                     )
-                }
+
             }
         }
         Text(
