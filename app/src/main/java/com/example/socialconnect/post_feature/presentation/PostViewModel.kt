@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.socialconnect.post_feature.domain.model.Post
 import com.example.socialconnect.post_feature.domain.repository.PostRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -118,6 +119,44 @@ class PostViewModel @Inject constructor(
             }
         }
     }
+
+    fun followUser(currentUserId: String, userToFollowId: String) {
+        viewModelScope.launch {
+            try {
+                firestore.collection("users").document(currentUserId)
+                    .update("following", FieldValue.arrayUnion(userToFollowId)).await()
+                firestore.collection("users").document(userToFollowId)
+                    .update("followers", FieldValue.arrayUnion(currentUserId)).await()
+            } catch (e: Exception) {
+                // I will handle exception later here
+            }
+        }
+    }
+
+    fun unfollowUser(currentUserId: String, userToUnfollowId: String) {
+        viewModelScope.launch {
+            try {
+                firestore.collection("users").document(currentUserId)
+                    .update("following", FieldValue.arrayRemove(userToUnfollowId)).await()
+
+                firestore.collection("users").document(userToUnfollowId)
+                    .update("followers", FieldValue.arrayRemove(currentUserId)).await()
+            } catch (e: Exception) {
+                // I will handle Exception later here
+            }
+        }
+    }
+    suspend fun isFollowing(currentUserId: String, otherUserId: String): Boolean {
+        return try {
+            val currentUser = firestore.collection("users").document(currentUserId).get().await()
+            val followingList = currentUser.get("following") as? List<*>
+            followingList?.contains(otherUserId) == true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+
 }
 
 
@@ -137,8 +176,11 @@ data class User(
     val designation: String = "",
     val twitter: String = "",
     val website: String = "",
-    val number: String = ""
+    val number: String = "",
+    val followers: List<String> = emptyList(),
+    val following: List<String> = emptyList()
 )
+
 
 
 sealed class PostState {

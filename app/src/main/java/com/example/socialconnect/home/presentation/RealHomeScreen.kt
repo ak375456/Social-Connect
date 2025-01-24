@@ -107,10 +107,13 @@ fun RealHomeScreen(
                     }
                 )
                 val posts = (postState as PostState.Success).posts
+                val currentUserId = authViewModel.getCurrentUserId().orEmpty()
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(posts) { postWithUser ->
                         PostItem(
                             postWithUser = postWithUser,
+                            currentUserId = currentUserId,
+                            postViewModel = postViewModel,
                             onLikeClick = {
                                 postViewModel.likePostOptimistic(postWithUser)
                             },
@@ -118,7 +121,6 @@ fun RealHomeScreen(
                         )
                     }
                 }
-
             }
 
             is PostState.Error -> {
@@ -131,15 +133,23 @@ fun RealHomeScreen(
     }
 }
 
-@Composable
-fun PostItem(postWithUser: PostWithUser,
-             onLikeClick: () -> Unit,
-             navController: NavHostController
-) {
 
-    var showAnimation by remember { mutableStateOf(false) }
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.like))
-    val progress = rememberLottieAnimatable()
+@Composable
+fun PostItem(
+    postWithUser: PostWithUser,
+    currentUserId: String,
+    postViewModel: PostViewModel,
+    onLikeClick: () -> Unit,
+    navController: NavHostController,
+) {
+    var isFollowing by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(true) }
+
+    // Check follow status when the composable is displayed
+    LaunchedEffect(Unit) {
+        isFollowing = postViewModel.isFollowing(currentUserId, postWithUser.post.userId)
+        isLoading = false
+    }
 
     Column(
         modifier = Modifier
@@ -153,7 +163,7 @@ fun PostItem(postWithUser: PostWithUser,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 8.dp, top = 8.dp)
-                .clickable{
+                .clickable {
                     navController.currentBackStackEntry?.savedStateHandle?.set(
                         "selectedUserId", postWithUser.post.userId
                     )
@@ -186,6 +196,27 @@ fun PostItem(postWithUser: PostWithUser,
                     fontSize = 18.sp,
                 )
             )
+
+            // Follow/Unfollow button
+            if (postWithUser.post.userId != currentUserId) {
+                Spacer(modifier = Modifier.width(8.dp))
+                if (isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                } else {
+                    MyButton(
+                        text = if (isFollowing) "Unfollow" else "+ Follow",
+                        isEmptyBackground = false,
+                        onClick = {
+                            if (isFollowing) {
+                                postViewModel.unfollowUser(currentUserId, postWithUser.post.userId)
+                            } else {
+                                postViewModel.followUser(currentUserId, postWithUser.post.userId)
+                            }
+                            isFollowing = !isFollowing
+                        }
+                    )
+                }
+            }
         }
         Text(
             modifier = Modifier.padding(start = 8.dp),
@@ -201,26 +232,9 @@ fun PostItem(postWithUser: PostWithUser,
             ) {
                 // Like Button
                 IconButton(onClick = {
-                    showAnimation = true
                     onLikeClick()
                 }) {
                     Icon(Lucide.ThumbsUp, "")
-                }
-
-                // Lottie Animation
-                if (showAnimation) {
-                    LaunchedEffect(Unit) {
-                        progress.animate(
-                            composition = composition,
-                            iterations = 1
-                        )
-                        showAnimation = false
-                    }
-                    LottieAnimation(
-                        composition = composition,
-                        progress = { progress.progress },
-                        modifier = Modifier.size(100.dp)
-                    )
                 }
             }
             Text(postWithUser.post.likesCount.toString())
@@ -235,6 +249,7 @@ fun PostItem(postWithUser: PostWithUser,
     )
     HorizontalDivider()
 }
+
 
 
 

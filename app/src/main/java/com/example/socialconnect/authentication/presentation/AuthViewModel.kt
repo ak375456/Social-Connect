@@ -25,6 +25,9 @@ class AuthViewModel @Inject constructor() : ViewModel() {
 
     private val _userData = MutableStateFlow<Map<String, Any>?>(null)
     val userData = _userData.asStateFlow()
+    fun getCurrentUserId(): String? {
+        return auth.currentUser?.uid
+    }
 
     fun getUserData(
 //        uid: String
