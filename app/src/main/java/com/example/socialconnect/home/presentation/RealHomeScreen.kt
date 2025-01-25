@@ -227,7 +227,6 @@ fun PostItem(
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Box(
                 contentAlignment = Alignment.Center,

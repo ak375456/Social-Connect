@@ -64,7 +64,7 @@ fun DynamicAppBar(currentRoute: String?, navController: NavHostController) {
             MyTopAppBar(title = "Settings")
         }
         else -> {
-            MyTopAppBar(title = "SocialConnect")
+            MyTopAppBar(title = "Chat")
         }
     }
 }
