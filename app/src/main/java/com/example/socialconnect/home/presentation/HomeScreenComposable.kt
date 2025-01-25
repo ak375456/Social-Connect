@@ -7,6 +7,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -14,8 +15,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.socialconnect.home.BottomAppBarHolder
 import com.example.socialconnect.navigation_setup.navigation_graphs.HomeNavGraph
 import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Plus
+import com.example.socialconnect.authentication.presentation.AuthViewModel
 import com.example.socialconnect.navigation_setup.BottomAppBarScreen
 import com.example.socialconnect.navigation_setup.Screens
 import com.example.socialconnect.util.MyTopAppBar
@@ -24,6 +27,10 @@ import com.example.socialconnect.util.MyTopAppBar
 fun HomeScreen(navController: NavHostController = rememberNavController()) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val authViewModel = hiltViewModel<AuthViewModel>()
+    val authState by authViewModel.authState.collectAsState()
+
+    val currentUserId = authViewModel.getCurrentUserId().orEmpty()
 
     Scaffold(
         topBar = { DynamicAppBar(currentRoute, navController) },
@@ -43,7 +50,10 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            HomeNavGraph(navController)
+            HomeNavGraph(
+                navController,
+
+            )
         }
     }
 }

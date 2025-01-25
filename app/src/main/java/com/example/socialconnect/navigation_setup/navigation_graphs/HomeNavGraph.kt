@@ -45,9 +45,16 @@ fun HomeNavGraph(navController: NavHostController) {
             Log.d("IDDD", userId.toString())
                 ViewProfile(userId = userId.toString())
         }
-        composable(route = CHAT_ROUTE){
+        composable(
+            route = "$CHAT_ROUTE/{otherUserId}"
+        ) { backStackEntry ->
             val chatNavController = rememberNavController()
-            ChatNavGraph(chatNavController)
+            // Pass the original parameters
+            val otherUserId = backStackEntry.arguments?.getString("otherUserId") ?: ""
+            ChatNavGraph(
+                navController = chatNavController,
+                otherUserId = otherUserId // Pass the parameter through
+            )
         }
     }
 }

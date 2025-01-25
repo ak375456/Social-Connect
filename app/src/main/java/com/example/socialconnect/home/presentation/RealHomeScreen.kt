@@ -245,10 +245,11 @@ fun PostItem(
                     horizontalArrangement = Arrangement.End
                 ) {
                     IconButton(onClick = {
-                        navController.navigate(route= CHAT_ROUTE)
+                        navController.navigate("$CHAT_ROUTE/${postWithUser.post.userId}")
                     }) {
                         Icon(Lucide.MessageCircle, "")
                     }
+
                 }
             }
         }
