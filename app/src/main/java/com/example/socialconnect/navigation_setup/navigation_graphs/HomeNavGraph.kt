@@ -49,11 +49,11 @@ fun HomeNavGraph(navController: NavHostController) {
             route = "$CHAT_ROUTE/{otherUserId}"
         ) { backStackEntry ->
             val chatNavController = rememberNavController()
-            // Pass the original parameters
+
             val otherUserId = backStackEntry.arguments?.getString("otherUserId") ?: ""
             ChatNavGraph(
                 navController = chatNavController,
-                otherUserId = otherUserId // Pass the parameter through
+                otherUserId = otherUserId
             )
         }
     }

@@ -1,4 +1,4 @@
-package com.example.socialconnect
+package com.example.socialconnect.message.domain.repo
 
 data class ChatRoom(
     val id: String = "",

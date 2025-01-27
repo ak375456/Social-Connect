@@ -202,7 +202,7 @@ fun AdditionalInfoComposable(
                             firstName = firstName,
                             lastName = lastName,
                             number = number,
-                            profilePictureLink = "https://i.ibb.co/jwZ2sch/IMG-20240826-060050-627.jpg",
+                            profilePictureLink = "https://i.ibb.co/cwTrdjy/IMG20201206135339.jpg",
                             bio = bio,
                             designation = designation,
                             twitter = twitter,

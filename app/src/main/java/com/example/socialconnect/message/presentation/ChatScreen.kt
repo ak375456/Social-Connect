@@ -4,14 +4,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.socialconnect.ChatViewModel
-import com.example.socialconnect.Message
+import com.example.socialconnect.message.domain.repo.Message
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -71,7 +70,7 @@ fun ChatScreen(
                     messageText = ""
                 }
             }) {
-                Icon(Icons.Default.Send, contentDescription = null)
+                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null)
             }
         }
     }

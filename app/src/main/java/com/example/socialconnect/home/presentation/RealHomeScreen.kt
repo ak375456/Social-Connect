@@ -46,13 +46,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.rememberLottieAnimatable
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Menu
 import com.composables.icons.lucide.MessageCircle
 import com.composables.icons.lucide.ThumbsUp
+import com.example.socialconnect.home.presentation.utility.OptionMenu
 import com.example.socialconnect.navigation_setup.ROOT_ROUTE
 import com.example.socialconnect.post_feature.presentation.PostState
 import com.example.socialconnect.post_feature.presentation.PostViewModel
@@ -61,9 +59,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import com.example.socialconnect.R
 import com.example.socialconnect.navigation_setup.CHAT_ROUTE
-import com.example.socialconnect.navigation_setup.ChatScreen
 import com.example.socialconnect.navigation_setup.Screens
 
 
@@ -93,7 +89,6 @@ fun RealHomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
     ) {
         when (postState) {
             is PostState.Loading -> {
@@ -148,8 +143,9 @@ fun PostItem(
 ) {
     var isFollowing by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
+    var showMenu by remember { mutableStateOf(false) }
 
-    // Check follow status when the composable is displayed
+    
     LaunchedEffect(Unit) {
         isFollowing = postViewModel.isFollowing(currentUserId, postWithUser.post.userId)
         isLoading = false
@@ -248,8 +244,29 @@ fun PostItem(
                         navController.navigate("$CHAT_ROUTE/${postWithUser.post.userId}")
                     }) {
                         Icon(Lucide.MessageCircle, "")
-                    }
 
+                    }
+                }
+            }
+            if (postWithUser.post.userId == currentUserId) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Box {
+                        IconButton(
+                            onClick = { showMenu = true }
+                        ) {
+                            Icon(Lucide.Menu, "Options")
+                        }
+
+                        OptionMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false },
+                            onEditClick = { /* Handle edit */ },
+                            onDeleteClick = { /* Handle delete */ }
+                        )
+                    }
                 }
             }
         }

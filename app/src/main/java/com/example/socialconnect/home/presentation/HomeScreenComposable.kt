@@ -3,6 +3,7 @@ package com.example.socialconnect.home.presentation
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -15,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.socialconnect.home.BottomAppBarHolder
 import com.example.socialconnect.navigation_setup.navigation_graphs.HomeNavGraph
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Plus
@@ -37,7 +39,9 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
         bottomBar = { BottomAppBarHolder(navController) },
         floatingActionButton = {
             if (currentRoute == BottomAppBarScreen.HomeScreen.route) {
-                FloatingActionButton(onClick = {
+                FloatingActionButton(
+                    modifier = Modifier.size(48.dp),
+                    onClick = {
                     navController.navigate(route = Screens.PostScreen.route)
                 }) {
                     Icon(Lucide.Plus,"")
