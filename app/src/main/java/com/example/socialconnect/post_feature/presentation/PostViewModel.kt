@@ -119,6 +119,17 @@ class PostViewModel @Inject constructor(
             }
         }
     }
+    fun deletePost(id:String) {
+        viewModelScope.launch {
+            _postState.value = PostState.Loading
+            try {
+                postRepository.deletePost(id)
+                fetchPostsWithUserDetails() // Refresh posts
+            } catch (e: Exception) {
+                _postState.value = PostState.Error(e.message ?: "Failed to delete post")
+            }
+        }
+    }
 
     fun followUser(currentUserId: String, userToFollowId: String) {
         viewModelScope.launch {

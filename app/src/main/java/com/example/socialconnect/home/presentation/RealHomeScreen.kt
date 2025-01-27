@@ -1,5 +1,6 @@
 package com.example.socialconnect.home.presentation
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -145,7 +146,7 @@ fun PostItem(
     var isLoading by remember { mutableStateOf(true) }
     var showMenu by remember { mutableStateOf(false) }
 
-    
+
     LaunchedEffect(Unit) {
         isFollowing = postViewModel.isFollowing(currentUserId, postWithUser.post.userId)
         isLoading = false
@@ -264,7 +265,10 @@ fun PostItem(
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false },
                             onEditClick = { /* Handle edit */ },
-                            onDeleteClick = { /* Handle delete */ }
+                            onDeleteClick = {
+                                postViewModel.deletePost(postWithUser.post.id)
+                                Log.d("MINE","post delete")
+                            }
                         )
                     }
                 }
