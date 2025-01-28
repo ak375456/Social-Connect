@@ -62,6 +62,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import com.example.socialconnect.navigation_setup.CHAT_ROUTE
 import com.example.socialconnect.navigation_setup.Screens
+import com.example.socialconnect.post_feature.domain.model.Post
 
 
 @Composable
@@ -260,14 +261,27 @@ fun PostItem(
                         ) {
                             Icon(Lucide.Menu, "Options")
                         }
-
+                        val post: Post = Post(
+//                            id = ,
+//                            userId = TODO(),
+                            content = "UPDATED POST",
+                            timestamp = System.currentTimeMillis(),
+//                            likesCount = TODO(),
+//                            commentsCount = TODO()
+                        )
                         OptionMenu(
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false },
-                            onEditClick = { /* Handle edit */ },
+                            onEditClick = {
+                                val updatedPost = postWithUser.post.copy(
+                                    content = "UPDATED POST",
+                                    timestamp = System.currentTimeMillis()
+                                )
+                                postViewModel.updatePost(updatedPost)
+                            },
                             onDeleteClick = {
                                 postViewModel.deletePost(postWithUser.post.id)
-                                Log.d("MINE","post delete")
+                                Log.d("MINE", "post delete")
                             }
                         )
                     }

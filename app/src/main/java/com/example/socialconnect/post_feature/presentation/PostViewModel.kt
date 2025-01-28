@@ -1,5 +1,6 @@
 package com.example.socialconnect.post_feature.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.socialconnect.post_feature.domain.model.Post
@@ -127,6 +128,18 @@ class PostViewModel @Inject constructor(
                 fetchPostsWithUserDetails() // Refresh posts
             } catch (e: Exception) {
                 _postState.value = PostState.Error(e.message ?: "Failed to delete post")
+            }
+        }
+    }
+    fun updatePost(post: Post){
+        viewModelScope.launch {
+            _postState.value = PostState.Loading
+            try {
+                Log.d("MINE", "Updating post with ID: ${post.id}")
+                postRepository.updatePost(post)
+                fetchPostsWithUserDetails() // Refresh posts
+            } catch (e: Exception) {
+                _postState.value = PostState.Error(e.message ?: "Failed to update post")
             }
         }
     }

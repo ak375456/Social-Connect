@@ -57,6 +57,4 @@ fun PostScreenComposable(
             Text("Post")
         }
     }
-
-
 }
