@@ -28,6 +28,7 @@ fun MyTextField(
     onPasswordToggle: (() -> Unit)? = null,
     isError:Boolean = false,
     supportingTextFunction : @Composable (() -> Unit)? = null,
+    trailingIcon : @Composable (() -> Unit)? = null,
     isReadOnly: Boolean = false
 ) {
     OutlinedTextField(

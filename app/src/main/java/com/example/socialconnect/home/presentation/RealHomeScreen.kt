@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Meh
 import com.composables.icons.lucide.Menu
 import com.composables.icons.lucide.MessageCircle
 import com.composables.icons.lucide.ThumbsUp
@@ -62,7 +63,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import com.example.socialconnect.navigation_setup.CHAT_ROUTE
 import com.example.socialconnect.navigation_setup.Screens
-import com.example.socialconnect.post_feature.domain.model.Post
+import com.example.socialconnect.util.MyTextField
 
 
 @Composable
@@ -146,6 +147,8 @@ fun PostItem(
     var isFollowing by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
     var showMenu by remember { mutableStateOf(false) }
+    var showTextFieldForEdit by remember { mutableStateOf(false) }
+    var editedText by remember { mutableStateOf(postWithUser.post.content) }
 
 
     LaunchedEffect(Unit) {
@@ -218,10 +221,36 @@ fun PostItem(
 
             }
         }
-        Text(
-            modifier = Modifier.padding(start = 8.dp),
-            text = postWithUser.post.content
-        )
+        if (showTextFieldForEdit) {
+            MyTextField(
+                value = editedText,
+                onValueChanged = {
+                    editedText = it
+                },
+
+                label = "",
+                painter = Lucide.Meh,
+                isPassword = false,
+                isError = false,
+                supportingTextFunction = {
+                    Text("Edit Post")
+                },
+                isReadOnly = false
+            )
+            MyButton(
+                modifier = Modifier.weight(0.5f),
+                onClick = {
+                    val updatedPost = postWithUser.post.copy(content = editedText)
+                    postViewModel.updatePost(updatedPost)
+                },
+                text = "Edit!"
+            )
+        } else {
+            Text(
+                modifier = Modifier.padding(start = 8.dp),
+                text = postWithUser.post.content
+            )
+        }
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -261,23 +290,16 @@ fun PostItem(
                         ) {
                             Icon(Lucide.Menu, "Options")
                         }
-                        val post: Post = Post(
-//                            id = ,
-//                            userId = TODO(),
-                            content = "UPDATED POST",
-                            timestamp = System.currentTimeMillis(),
-//                            likesCount = TODO(),
-//                            commentsCount = TODO()
-                        )
                         OptionMenu(
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false },
                             onEditClick = {
-                                val updatedPost = postWithUser.post.copy(
-                                    content = "UPDATED POST",
-                                    timestamp = System.currentTimeMillis()
-                                )
-                                postViewModel.updatePost(updatedPost)
+                                showTextFieldForEdit = true
+//                                val updatedPost = postWithUser.post.copy(
+//                                    content = "UPDATED POST",
+//                                    timestamp = System.currentTimeMillis()
+//                                )
+//                                postViewModel.updatePost(updatedPost)
                             },
                             onDeleteClick = {
                                 postViewModel.deletePost(postWithUser.post.id)

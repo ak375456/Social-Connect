@@ -19,6 +19,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+        multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -72,6 +73,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
     implementation ("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
 
+    implementation ("androidx.multidex:multidex:2.0.1")
+
     implementation("com.google.dagger:hilt-android:2.51.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     ksp("com.google.dagger:hilt-android-compiler:2.51.1")
@@ -90,4 +93,6 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.5.0")
 
     implementation ("com.airbnb.android:lottie-compose:6.6.2")
+
+
 }

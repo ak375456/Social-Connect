@@ -18,7 +18,8 @@ import androidx.compose.ui.unit.sp
 fun MyButton(
     text: String,
     onClick: () -> Unit,
-    isEmptyBackground: Boolean = false
+    isEmptyBackground: Boolean = false,
+    modifier:Modifier = Modifier
 ) {
     Button(
         modifier = Modifier
