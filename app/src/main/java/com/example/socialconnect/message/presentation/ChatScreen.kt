@@ -1,8 +1,11 @@
 package com.example.socialconnect.message.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.*
@@ -14,14 +17,16 @@ import com.example.socialconnect.message.domain.repo.Message
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun ChatScreen(
     navController: NavHostController,
     currentUserId: String,
     otherUserId: String,
-    viewModel: ChatViewModel = hiltViewModel()
+    viewModel: ChatViewModel = hiltViewModel(),
 ) {
     val chatRoomId by viewModel.chatRoomId.collectAsState()
     val messages by viewModel.messages.collectAsState()
@@ -34,15 +39,36 @@ fun ChatScreen(
         // Messages List
         LazyColumn(modifier = Modifier.weight(1f)) {
             items(messages) { message ->
-                Text(
-                    text = message.text,
-                    modifier = Modifier.padding(8.dp),
-                    style = if (message.senderId == currentUserId) {
-                        TextStyle(color = Color.Blue)
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    horizontalArrangement = (if (message.senderId == currentUserId)
+                        Arrangement.End
+                    else {
+                        Arrangement.Start
+                    })
+                ) {
+                    if (message.senderId == currentUserId) {
+                        Box(
+                            modifier = Modifier.background(
+                                color = MaterialTheme.colorScheme.secondaryContainer,
+                                shape = RoundedCornerShape(18))
+                        ) {
+                            Text(
+                                text = message.text,
+                                modifier = Modifier
+                                    .padding(8.dp),
+                                fontSize = 18.sp
+                            )
+                        }
                     } else {
-                        TextStyle(color = Color.Black)
+                        Text(
+                            text = message.text,
+                            modifier = Modifier
+                                .padding(8.dp),
+                            style = TextStyle(color = Color.Black)
+                        )
                     }
-                )
+                }
             }
         }
 
@@ -73,5 +99,23 @@ fun ChatScreen(
                 Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null)
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun Boxx() {
+    Box(
+        modifier = Modifier.background(
+            color = MaterialTheme.colorScheme.secondaryContainer,
+            shape = RoundedCornerShape(18)
+        )
+    ) {
+        Text(
+            text = "Hello",
+            modifier = Modifier
+                .padding(8.dp),
+            style = TextStyle(color = Color.Black)
+        )
     }
 }
