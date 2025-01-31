@@ -1,6 +1,8 @@
 package com.example.socialconnect.message.presentation
 
+import androidx.activity.SystemBarStyle
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,21 +39,28 @@ fun ChatScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         // Messages List
-        LazyColumn(modifier = Modifier.weight(1f)) {
+        LazyColumn(
+            modifier = Modifier.weight(9f),
+            reverseLayout = true
+            ) {
+
             items(messages) { message ->
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(8.dp),
-                    horizontalArrangement = (if (message.senderId == currentUserId)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = if (message.senderId == currentUserId)
                         Arrangement.End
                     else {
                         Arrangement.Start
-                    })
+                    }
                 ) {
                     if (message.senderId == currentUserId) {
                         Box(
                             modifier = Modifier.background(
                                 color = MaterialTheme.colorScheme.secondaryContainer,
-                                shape = RoundedCornerShape(18))
+                                shape = RoundedCornerShape(18)
+                            )
                         ) {
                             Text(
                                 text = message.text,
@@ -61,12 +70,25 @@ fun ChatScreen(
                             )
                         }
                     } else {
-                        Text(
-                            text = message.text,
-                            modifier = Modifier
-                                .padding(8.dp),
-                            style = TextStyle(color = Color.Black)
-                        )
+                        Box(
+                            modifier = Modifier.background(
+                                color = if (!isSystemInDarkTheme()) {
+                                    Color(0xFFF0DFBC)
+                                } else {
+                                    Color(0xFF6f5b3e)
+                                },
+                                shape = RoundedCornerShape(18)
+                            )
+                        ) {
+                            Text(
+                                text = message.text,
+                                modifier = Modifier
+                                    .padding(8.dp),
+                                fontSize = 18.sp,
+                                color = Color.Black
+
+                            )
+                        }
                     }
                 }
             }
@@ -75,7 +97,7 @@ fun ChatScreen(
         // Message Input
         var messageText by remember { mutableStateOf("") }
         Row(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(8.dp).weight(1f, false),
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
