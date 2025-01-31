@@ -18,10 +18,16 @@ import androidx.navigation.NavHostController
 import com.example.socialconnect.message.domain.repo.Message
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.socialconnect.home.presentation.formatTimestamp
+import com.google.firebase.Timestamp
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun ChatScreen(
@@ -32,19 +38,26 @@ fun ChatScreen(
 ) {
     val chatRoomId by viewModel.chatRoomId.collectAsState()
     val messages by viewModel.messages.collectAsState()
+    val keyboardController = LocalSoftwareKeyboardController.current
+
 
     LaunchedEffect(otherUserId) {
         viewModel.getOrCreateChatRoom(currentUserId, otherUserId)
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.statusBars)
+    ) {
         // Messages List
         LazyColumn(
             modifier = Modifier.weight(9f),
-            reverseLayout = true
-            ) {
-
+            reverseLayout = false
+        ) {
             items(messages) { message ->
+                val timestamp = message.timestamp
+                val formattedTime = formatTimestampToTime(timestamp)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -62,12 +75,23 @@ fun ChatScreen(
                                 shape = RoundedCornerShape(18)
                             )
                         ) {
-                            Text(
-                                text = message.text,
-                                modifier = Modifier
-                                    .padding(8.dp),
-                                fontSize = 18.sp
-                            )
+                            Column {
+                                Text(
+                                    text = message.text,
+                                    modifier = Modifier
+                                        .padding(8.dp),
+                                    fontSize = 18.sp
+                                )
+                                Text(
+                                    modifier = Modifier
+                                        .align(Alignment.End)
+                                        .padding(bottom = 2.dp, end = 4.dp),
+                                    text = formattedTime, style = TextStyle(
+                                        fontSize = 8.sp,
+                                        fontWeight = FontWeight.Light
+                                    )
+                                )
+                            }
                         }
                     } else {
                         Box(
@@ -97,7 +121,9 @@ fun ChatScreen(
         // Message Input
         var messageText by remember { mutableStateOf("") }
         Row(
-            modifier = Modifier.padding(8.dp).weight(1f, false),
+            modifier = Modifier
+                .padding(8.dp)
+                .weight(1f, false),
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
@@ -140,4 +166,10 @@ fun Boxx() {
             style = TextStyle(color = Color.Black)
         )
     }
+}
+
+fun formatTimestampToTime(timestamp: Long): String {
+    val date = timestamp
+    val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault()) // 12-hour format with AM/PM
+    return sdf.format(date)
 }
