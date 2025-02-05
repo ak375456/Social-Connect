@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -51,6 +53,7 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Meh
 import com.composables.icons.lucide.Menu
 import com.composables.icons.lucide.MessageCircle
+import com.composables.icons.lucide.Search
 import com.composables.icons.lucide.ThumbsUp
 import com.example.socialconnect.home.presentation.utility.OptionMenu
 import com.example.socialconnect.navigation_setup.ROOT_ROUTE
@@ -95,19 +98,38 @@ fun RealHomeScreen(
     ) {
         when (postState) {
             is PostState.Loading -> {
-                Box(modifier = Modifier.fillMaxWidth()) {
+                Box(modifier = Modifier.fillMaxWidth().height(56.dp),) {
                     CircularProgressIndicator()
                 }
             }
 
             is PostState.Success -> {
-                MyButton(
-                    text = "Logout",
-                    isEmptyBackground = false,
-                    onClick = {
-                        authViewModel.signOut()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Constrain button width
+                    MyButton(
+                        text = "Logout",
+                        isEmptyBackground = false,
+                        onClick = {
+                            authViewModel.signOut()
+                        },
+                        modifier = Modifier.wrapContentWidth()
+                    )
+                    IconButton(
+                        onClick = { /* Handle search */ },
+                    ) {
+                        Icon(
+                            Lucide.Search,
+                            contentDescription = "Search",
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
                     }
-                )
+                }
                 val posts = (postState as PostState.Success).posts
                 val currentUserId = authViewModel.getCurrentUserId().orEmpty()
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
