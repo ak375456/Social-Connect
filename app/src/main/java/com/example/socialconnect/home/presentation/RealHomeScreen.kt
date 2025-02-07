@@ -11,18 +11,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -58,6 +55,7 @@ import com.composables.icons.lucide.Menu
 import com.composables.icons.lucide.MessageCircle
 import com.composables.icons.lucide.Search
 import com.composables.icons.lucide.ThumbsUp
+import com.example.socialconnect.home.presentation.utility.HighlightedText
 import com.example.socialconnect.home.presentation.utility.OptionMenu
 import com.example.socialconnect.navigation_setup.ROOT_ROUTE
 import com.example.socialconnect.post_feature.presentation.PostState
@@ -82,11 +80,9 @@ fun RealHomeScreen(
 
     val postState by postViewModel.postState.collectAsState()
 
-    // Add search state
     var showSearchDialog by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
 
-    // Filtered posts based on search
     val filteredPosts = when (postState) {
         is PostState.Success -> {
             val posts = (postState as PostState.Success).posts
@@ -101,7 +97,6 @@ fun RealHomeScreen(
         else -> emptyList()
     }
 
-    // Show search dialog
     if (showSearchDialog) {
         AlertDialog(
             onDismissRequest = { showSearchDialog = false },
@@ -154,7 +149,6 @@ fun RealHomeScreen(
                         Text("Sign Out")
                     }
 
-                    // Update search icon click
                     IconButton(onClick = { showSearchDialog = true }) {
                         Icon(Lucide.Search, "Search")
                     }
@@ -170,7 +164,8 @@ fun RealHomeScreen(
                             onLikeClick = {
                                 postViewModel.likePostOptimistic(postWithUser)
                             },
-                            navController = navController
+                            navController = navController,
+                            searchQuery
                         )
                     }
                 }
@@ -194,6 +189,7 @@ fun PostItem(
     postViewModel: PostViewModel,
     onLikeClick: () -> Unit,
     navController: NavHostController,
+    searchQuery: String
 ) {
     var isFollowing by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
@@ -246,11 +242,11 @@ fun PostItem(
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
-            Text(
-                postWithUser.userName, style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                )
+            HighlightedText(
+                text = postWithUser.userName,
+                query = searchQuery,
+                modifier = Modifier.padding(horizontal = 8.dp),
+                highlightColor = Color.Yellow.copy(alpha = 0.5f)
             )
 
             // Follow/Unfollow button
