@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -107,19 +108,17 @@ fun RealHomeScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp)
                         .padding(horizontal = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Constrain button width
-                    MyButton(
-                        text = "Logout",
-                        isEmptyBackground = false,
+                    Button(
+                        modifier = Modifier.fillMaxWidth().weight(0.9f),
                         onClick = {
                             authViewModel.signOut()
-                        },
-                        modifier = Modifier.wrapContentWidth()
-                    )
+                        }
+                    ) {
+                        Text(text = "Sign Out")
+                    }
                     IconButton(
                         onClick = { /* Handle search */ },
                     ) {
