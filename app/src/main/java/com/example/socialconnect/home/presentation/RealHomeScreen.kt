@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -27,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -80,6 +82,49 @@ fun RealHomeScreen(
 
     val postState by postViewModel.postState.collectAsState()
 
+    // Add search state
+    var showSearchDialog by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
+
+    // Filtered posts based on search
+    val filteredPosts = when (postState) {
+        is PostState.Success -> {
+            val posts = (postState as PostState.Success).posts
+            if (searchQuery.isBlank()) {
+                posts
+            } else {
+                posts.filter {
+                    it.userName.contains(searchQuery, ignoreCase = true)
+                }
+            }
+        }
+        else -> emptyList()
+    }
+
+    // Show search dialog
+    if (showSearchDialog) {
+        AlertDialog(
+            onDismissRequest = { showSearchDialog = false },
+            title = { Text("Search Posts") },
+            text = {
+                Column {
+                    TextField(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        label = { Text("Search by username") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                Button(onClick = { showSearchDialog = false }) {
+                    Text("Close")
+                }
+            }
+        )
+    }
+
+
     LaunchedEffect(authState) {
         if (authState is AuthState.Success) {
             navController.popBackStack()
@@ -93,17 +138,8 @@ fun RealHomeScreen(
         postViewModel.fetchPostsWithUserDetails()
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         when (postState) {
-            is PostState.Loading -> {
-                Box(modifier = Modifier.fillMaxWidth().height(56.dp),) {
-                    CircularProgressIndicator()
-                }
-            }
-
             is PostState.Success -> {
                 Row(
                     modifier = Modifier
@@ -112,27 +148,21 @@ fun RealHomeScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
-                        modifier = Modifier.fillMaxWidth().weight(0.9f),
-                        onClick = {
-                            authViewModel.signOut()
-                        }
+                        modifier = Modifier.weight(0.9f),
+                        onClick = { authViewModel.signOut() }
                     ) {
-                        Text(text = "Sign Out")
+                        Text("Sign Out")
                     }
-                    IconButton(
-                        onClick = { /* Handle search */ },
-                    ) {
-                        Icon(
-                            Lucide.Search,
-                            contentDescription = "Search",
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
+
+                    // Update search icon click
+                    IconButton(onClick = { showSearchDialog = true }) {
+                        Icon(Lucide.Search, "Search")
                     }
                 }
-                val posts = (postState as PostState.Success).posts
+
                 val currentUserId = authViewModel.getCurrentUserId().orEmpty()
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(posts) { postWithUser ->
+                    items(filteredPosts) { postWithUser ->
                         PostItem(
                             postWithUser = postWithUser,
                             currentUserId = currentUserId,
